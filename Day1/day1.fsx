@@ -14,7 +14,7 @@ let rec getTripletSum (target: int) (number: int) (sequence: seq<int>)  =
     | Some (second, third) -> Some (number, second, third)
     | None -> None
 
-let input = InputHelper.inputInt __SOURCE_DIRECTORY__
+let input = InputHelper.input 1 |> Seq.map int
 let result1 = input |> Seq.tryPick (fun number -> getPairSum 2020 number input)
 match result1 with
 | Some (a, b) -> printfn $"{a * b}"
