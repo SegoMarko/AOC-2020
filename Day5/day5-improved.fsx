@@ -61,15 +61,17 @@ let filterPositionNotOnTheEdge (seatId: int) =
     seatId / 8 <> 0 && seatId / 8 <> 127
 
 let getSolution (seatIds: int list) : int =
-    let solution = 
-        seatIds 
-        |> List.pairwise 
-        |> List.pick (
-            fun (first, second) -> 
-            if System.Math.Abs(first - second) > 2 
-            then Some first 
-            else None)
-    solution
+    let distanceMoreThan1 (index: int) (current: int) : bool =
+        if index = -1 || index = seatIds.Length
+        then true
+        else System.Math.Abs (seatIds[index] - current) > 1
+    let mutable result = -1
+    let index = 0
+    while result = -1 do
+        let current = seatIds[index]
+        if distanceMoreThan1 (index - 1) current && distanceMoreThan1 (index + 1) current
+        then result <- current
+    result
 
 let result2 = 
     input 
