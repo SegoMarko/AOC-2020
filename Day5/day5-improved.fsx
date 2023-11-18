@@ -44,9 +44,11 @@ let mapInputLine (line: string) : Direction list =
         | 'R' -> yield Upper
         | _ -> failwith "input error"]
 
+let mapInputLineToSeatId = mapInputLine >> getSeatId
+let seatIds = input |> Seq.map mapInputLineToSeatId
+
 let result1 = 
-    input 
-    |> Seq.map (fun line -> line |> mapInputLine |> getSeatId) 
+    seatIds
     |> Seq.max
 printfn "%A" result1
 
@@ -74,8 +76,7 @@ let getSolution (seatIds: int list) : int =
     result
 
 let result2 = 
-    input 
-    |> Seq.map (fun line -> line |> mapInputLine |> getSeatId)
+    seatIds
     |> set 
     |> getRemainingPositions
     |> List.filter filterPositionNotOnTheEdge
