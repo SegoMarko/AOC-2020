@@ -75,13 +75,14 @@ let calculateAdapterGroupCombinations (adapterGroup: int list) : int =
                     temp <- temp + (firstOverSecond 3 i)
 
                 combinations <- combinations * temp
-                combinations <- combinations - restOfMiniGroup
 
         if restOfMiniGroup > 0 then
             let mutable temp = 0
             for i in [0 .. restOfMiniGroup] do
                 temp <- temp + (firstOverSecond restOfMiniGroup i)
             combinations <- combinations * temp
+
+        if miniGroup > 0 then combinations <- combinations - restOfMiniGroup
 
         combinations
     | _ -> 1
