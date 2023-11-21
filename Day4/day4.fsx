@@ -1,5 +1,4 @@
 #load "..\\InputHelper\\InputHelper.fsx"
-open InputHelper
 
 let mutableDict () = new System.Collections.Generic.Dictionary<string, string>()
 let input = InputHelper.input 4

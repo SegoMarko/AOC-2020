@@ -1,5 +1,4 @@
 #load "..\\InputHelper\\InputHelper.fsx"
-open InputHelper
 
 let getPairSum (target: int) (number: int) (sequence: seq<int>) =
     let found = sequence |> Seq.tryFind (fun x -> x = target - number)

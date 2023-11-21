@@ -1,5 +1,4 @@
 #load "..\\InputHelper\\InputHelper.fsx"
-open InputHelper
 
 let input = InputHelper.input 5
 

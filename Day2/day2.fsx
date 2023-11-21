@@ -1,5 +1,4 @@
 #load "..\\InputHelper\\InputHelper.fsx"
-open InputHelper
 
 type InputLine = {First: int; Second: int; Character: char; Password: string}
 
