@@ -32,14 +32,8 @@ let getState y x (board: SeatState array array) =
     | _ -> None
 
 let getNumOfOccupiedNeighbours y x (board: SeatState array array) = 
-    [getState (y-1) (x-1) board;
-    getState (y-1) (x) board;
-    getState (y-1) (x+1) board;
-    getState (y) (x-1) board;
-    getState (y) (x+1) board;
-    getState (y+1) (x-1) board;
-    getState (y+1) (x) board;
-    getState (y+1) (x+1) board]
+    [(y-1, x-1); (y-1, x); (y-1, x+1); (y, x-1); (y, x+1); (y+1, x-1); (y+1, x); (y+1, x+1)]
+    |> List.map (fun (row, column) -> getState row column board)
     |> List.choose id
     |> List.where (fun state -> state = Occupied)
     |> List.length
@@ -48,34 +42,27 @@ let customZip (l1: 'a list) (l2: 'b list) =
     let ending = if l1.Length > l2.Length then l2.Length else l1.Length
     [for index in [0..ending-1] do
         yield (l1[index], l2[index])]
+    
+let notFloor = (fun (s: SeatState) -> s <> Floor)
+let findFirstNotFloorInColumn (board: SeatState array array) (rowList: int list) column =
+    [for row in rowList do yield board[row][column]] |> List.tryFind notFloor
+
+let findFirstNotFloorInRow (board: SeatState array array) row (columnList: int list) =
+    [for column in columnList do yield board[row][column]] |> List.tryFind notFloor
+
+let findFirstNotFloorInDiagonal (board: SeatState array array) (rowList: int list) (columnList: int list) =
+    [for (row, column) in customZip rowList columnList do yield board[row][column]] |> List.tryFind notFloor
 
 let getNumOfOccupiedNeighbours2 y x (board: SeatState array array) = 
-    let notFloor = (fun (s: SeatState) -> s <> Floor)
     [
-        [for row in [y-1..-1..0] do
-            yield board[row][x]]
-        |> List.tryFind notFloor
-        [for row in [y+1..board.Length-1] do
-            yield board[row][x]]
-        |> List.tryFind notFloor
-        [for column in [x-1..-1..0] do
-            yield board[y][column]]
-        |> List.tryFind notFloor
-        [for column in [x+1..board[0].Length-1] do
-            yield board[y][column]]
-        |> List.tryFind notFloor
-        [for (row, column) in customZip [y-1..-1..0] [x-1..-1..0] do
-            yield board[row][column]]
-        |> List.tryFind notFloor
-        [for (row, column) in customZip [y-1..-1..0] [x+1..board[0].Length-1] do
-            yield board[row][column]]
-        |> List.tryFind notFloor
-        [for (row, column) in customZip [y+1..board.Length-1] [x-1..-1..0] do
-            yield board[row][column]]
-        |> List.tryFind notFloor
-        [for (row, column) in customZip [y+1..board.Length-1] [x+1..board[0].Length-1] do
-            yield board[row][column]]
-        |> List.tryFind notFloor
+        findFirstNotFloorInColumn board [y-1..-1..0] x
+        findFirstNotFloorInColumn board [y+1..board.Length-1] x
+        findFirstNotFloorInRow board y [x-1..-1..0]
+        findFirstNotFloorInRow board y [x+1..board[0].Length-1]
+        findFirstNotFloorInDiagonal board [y-1..-1..0] [x-1..-1..0]
+        findFirstNotFloorInDiagonal board [y-1..-1..0] [x+1..board[0].Length-1]
+        findFirstNotFloorInDiagonal board [y+1..board.Length-1] [x-1..-1..0]
+        findFirstNotFloorInDiagonal board [y+1..board.Length-1] [x+1..board[0].Length-1]
     ]
     |> List.choose id
     |> List.where (fun state -> state = Occupied)
